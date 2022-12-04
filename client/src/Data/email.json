@@ -1,0 +1,22 @@
+{
+  "username": "princegopinath42",
+  "domain": "gmail.com",
+  "emailAddress": "princegopinath42@gmail.com",
+  "formatCheck": "true",
+  "smtpCheck": "false",
+  "dnsCheck": "true",
+  "freeCheck": "true",
+  "disposableCheck": "false",
+  "catchAllCheck": "false",
+  "mxRecords": [
+    "alt4.gmail-smtp-in.l.google.com.",
+    "alt2.gmail-smtp-in.l.google.com.",
+    "gmail-smtp-in.l.google.com.",
+    "alt3.gmail-smtp-in.l.google.com.",
+    "alt1.gmail-smtp-in.l.google.com."
+  ],
+  "audit": {
+    "auditCreatedDate": "2022-09-14 10:15:06 UTC",
+    "auditUpdatedDate": "2022-09-14 10:15:06 UTC"
+  }
+}

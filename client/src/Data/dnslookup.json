@@ -1,0 +1,64 @@
+{
+  "domainName": "latrosoft.in",
+  "types": [1, 6, 16, 15],
+  "dnsTypes": "A,SOA,TXT,MX",
+  "audit": {
+    "createdDate": "2022-09-14 10:47:40 UTC",
+    "updatedDate": "2022-09-14 10:47:40 UTC"
+  },
+  "dnsRecords": [
+    {
+      "type": 16,
+      "dnsType": "TXT",
+      "name": "latrosoft.in.",
+      "ttl": 300,
+      "rRsetType": 16,
+      "rawText": "latrosoft.in.\t\t300\tIN\tTXT\t\"v=spf1 a mx ip4:159.65.149.57 ~all\"",
+      "strings": ["v=spf1 a mx ip4:159.65.149.57 ~all"]
+    },
+    {
+      "type": 1,
+      "dnsType": "A",
+      "name": "latrosoft.in.",
+      "ttl": 300,
+      "rRsetType": 1,
+      "rawText": "latrosoft.in.\t\t300\tIN\tA\t172.67.184.149",
+      "address": "172.67.184.149"
+    },
+    {
+      "type": 1,
+      "dnsType": "A",
+      "name": "latrosoft.in.",
+      "ttl": 300,
+      "rRsetType": 1,
+      "rawText": "latrosoft.in.\t\t300\tIN\tA\t104.21.59.220",
+      "address": "104.21.59.220"
+    },
+    {
+      "type": 6,
+      "dnsType": "SOA",
+      "name": "latrosoft.in.",
+      "ttl": 3600,
+      "rRsetType": 6,
+      "rawText": "latrosoft.in.\t\t3600\tIN\tSOA\tjakub.ns.cloudflare.com. dns.cloudflare.com. 2288576384 10000 2400 604800 3600",
+      "admin": "dns.cloudflare.com.",
+      "host": "jakub.ns.cloudflare.com.",
+      "expire": 604800,
+      "minimum": 3600,
+      "refresh": 10000,
+      "retry": 2400,
+      "serial": 2288576384
+    },
+    {
+      "type": 15,
+      "dnsType": "MX",
+      "name": "latrosoft.in.",
+      "additionalName": "_dc-mx.8bdbe61d0fc5.latrosoft.in.",
+      "ttl": 300,
+      "rRsetType": 15,
+      "rawText": "latrosoft.in.\t\t300\tIN\tMX\t10 _dc-mx.8bdbe61d0fc5.latrosoft.in.",
+      "priority": 10,
+      "target": "_dc-mx.8bdbe61d0fc5.latrosoft.in."
+    }
+  ]
+}
