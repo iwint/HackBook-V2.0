@@ -28,6 +28,33 @@ function Tabulation({ data }) {
             <TableCell>Status</TableCell>
             <TableCell>Date</TableCell> */}
             <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+
+            <TableCell>
+              <NavLink
+                style={{
+                  textDecoration: 'none',
+                  backgroundColor: '#4481EB',
+                  padding: '8px',
+                  borderRadius: '5px',
+                  color: '#ffff',
+                }}
+                to='/records/add'
+              >
+                Add
+              </NavLink>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
