@@ -31,8 +31,8 @@ function App() {
         <Route path='cctv/:id' element={<Info />} />
         <Route path='setting' element={<Setting />} />
         <Route path='/records' element={<CriminalRecords />} />
-        <Route path='/records/add' element={<CriminalAdd/>} />
-        <Route path='/emailoslint' element={<EmailOSLINT />} />
+        <Route path='/records/add' element={<CriminalAdd />} />
+        <Route path='/osint' element={<EmailOSLINT />} />
       </Routes>
     </BrowserRouter>
   );

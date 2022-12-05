@@ -6,53 +6,9 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import { SvgIcon } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DashboardIcon from '../../assets/Icons/DashboardIcon';
+import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import UsersIcon from '../../assets/Icons/UsersIcon';
 export const items = [
-  // {
-  //   title: 'Orgin Tracker',
-  //   to: '/orgintracker',
-  //   icon: (
-  //     <SvgIcon
-  //       component={CompassCalibrationIcon}
-  //       inheritViewBox
-  //       sx={{ color: '#A3AED0' }}
-  //     />
-  //   ),
-  // },
-  // {
-  //   title: 'DNS Lookup',
-  //   to: '/dnslookup',
-  //   icon: (
-  //     <SvgIcon
-  //       component={TravelExploreIcon}
-  //       sx={{ color: '#A3AED0' }}
-  //       inheritViewBox
-  //     />
-  //   ),
-  // },
-  // {
-  //   title: 'Email Tracker',
-  //   to: '/emailtracker',
-  //   icon: (
-  //     <SvgIcon
-  //       component={AlternateEmailIcon}
-  //       sx={{ color: '#A3AED0' }}
-  //       inheritViewBox
-  //     />
-  //   ),
-  // },
-  // {
-  //   title: 'Port Scan',
-  //   to: '/portscan',
-  //   icon: (
-  //     <SvgIcon
-  //       component={PolicyIcon}
-  //       sx={{ color: '#A3AED0' }}
-  //       inheritViewBox
-  //     />
-  //   ),
-  // },
-
   {
     title: 'Dashboard',
     to: '/',
@@ -83,8 +39,19 @@ export const items = [
     ),
   },
   {
-    title: 'Email OSLINT',
-    to: '/emailoslint',
+    title: 'OSINT',
+    to: '/osint',
+    icon: (
+      <SvgIcon
+        component={AttachEmailIcon}
+        inheritViewBox
+        sx={{ color: '#A3AED0' }}
+      />
+    ),
+  },
+  {
+    title: 'Orgin Tracker',
+    to: '/orgintracker',
     icon: (
       <SvgIcon
         component={CompassCalibrationIcon}
@@ -93,6 +60,40 @@ export const items = [
       />
     ),
   },
+  {
+    title: 'DNS Lookup',
+    to: '/dnslookup',
+    icon: (
+      <SvgIcon
+        component={TravelExploreIcon}
+        sx={{ color: '#A3AED0' }}
+        inheritViewBox
+      />
+    ),
+  },
+  {
+    title: 'Email Tracker',
+    to: '/emailtracker',
+    icon: (
+      <SvgIcon
+        component={AlternateEmailIcon}
+        sx={{ color: '#A3AED0' }}
+        inheritViewBox
+      />
+    ),
+  },
+  {
+    title: 'Port Scan',
+    to: '/portscan',
+    icon: (
+      <SvgIcon
+        component={PolicyIcon}
+        sx={{ color: '#A3AED0' }}
+        inheritViewBox
+      />
+    ),
+  },
+
   {
     title: 'Setting',
     to: '/setting',

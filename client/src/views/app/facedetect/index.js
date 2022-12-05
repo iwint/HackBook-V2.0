@@ -11,21 +11,39 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../../layouts/index';
 import Webcam from 'react-webcam';
 import CriminalPic from '../../../assets/Criminal.png';
+import axios from 'axios';
 
 function FaceDetect() {
-  const webcamRef = React.useRef(null);
-  const canvasRef = React.useRef(null);
+  const [CaptureImg, setCaptureImg] = useState('');
 
+  const webcamRef = React.useRef(null);
+  const [result, setResult] = useState([]);
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
+    setCaptureImg(imageSrc);
     console.log(imageSrc);
   }, [webcamRef]);
+  const handleImageChange = (e) => {
+    if (e.target.files.length) {
+      setCaptureImg(URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
-  useEffect(() => {}, []);
+  const handleFind = () => {};
+
   return (
     <Layout>
       <Grid container p={3} md={12} sx={{ backgroundColor: '#fff' }}>
-        <Grid item md={4} mr={'20px'} alignItems={'center'}>
+        <Grid
+          item
+          md={4}
+          mr={'20px'}
+          sx={{
+            display: 'flex',
+            alignItem: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <Webcam
             ref={webcamRef}
             muted={true}
@@ -40,7 +58,7 @@ function FaceDetect() {
           />
         </Grid>
         <Grid
-          md={5}
+          md={4}
           sx={{
             height: '330px',
             display: 'flex',
@@ -57,13 +75,13 @@ function FaceDetect() {
             }}
           >
             <Button
-              sx={{ marginTop: '8px', width: '100%' }}
+              sx={{ width: '100%' }}
               type='submit'
               variant='contained'
               component='label'
             >
               Upload File
-              <input type='file' hidden />
+              <input type='file' onChange={handleImageChange} hidden />
             </Button>
             <Button
               sx={{ marginTop: '8px', width: '100%' }}
@@ -74,8 +92,28 @@ function FaceDetect() {
             </Button>
           </Grid>
           <Grid
+            sx={{
+              padding: '8px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '5px',
+              border: CaptureImg !== '' ? '1px solid #000' : '',
+            }}
+            mt={2}
+          >
+            <img
+              style={{
+                width: '60%',
+              }}
+              src={CaptureImg}
+            />
+          </Grid>
+          <Grid
             style={{
               width: '100%',
+              display: 'flex',
+              gap: '0.5rem',
             }}
           >
             <Button
@@ -84,7 +122,16 @@ function FaceDetect() {
               variant='contained'
               onClick={() => capture()}
             >
-              capture
+              Capture
+            </Button>{' '}
+            <Button
+              sx={{ marginTop: '8px', width: '50%' }}
+              type='submit'
+              variant='contained'
+              color='error'
+              onClick={() => capture()}
+            >
+              Find
             </Button>
           </Grid>
         </Grid>
