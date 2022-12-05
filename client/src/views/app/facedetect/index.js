@@ -12,10 +12,14 @@ import Layout from '../../../layouts/index';
 import Webcam from 'react-webcam';
 import CriminalPic from '../../../assets/Criminal.png';
 import axios from 'axios';
+import fb from '../../../firebase'
+import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
+import { async } from '@firebase/util';
+
 
 function FaceDetect() {
   const [CaptureImg, setCaptureImg] = useState('');
-
+  const [file, setfile] = useState(null)
   const webcamRef = React.useRef(null);
   const [result, setResult] = useState([]);
   const capture = React.useCallback(() => {
@@ -25,11 +29,38 @@ function FaceDetect() {
   }, [webcamRef]);
   const handleImageChange = (e) => {
     if (e.target.files.length) {
+      setfile(e.target.files[0])
       setCaptureImg(URL.createObjectURL(e.target.files[0]));
     }
   };
 
-  const handleFind = () => {};
+  const handleFind = async (e) => {
+    const getArr = []
+    const formData = new FormData();
+    formData.append("face",file);
+    axios({
+      method: "post",
+      url: "http://localhost:5000/facematch",
+      data: formData,
+      headers: {"Content-Type": "multipart/form-data", },
+    }).then(async result=>{
+      const filter =  result.data.filter(e=>e.result.confidence!==0)
+      await Promise.all(
+        filter.map(async (e) => {
+          const db = getFirestore(fb);
+          const dm =await (await getDoc(doc(db,'criminals',e.name))).data()
+          return {...dm};
+        }),
+      ).then((e) => {
+            console.log(e);
+            
+            setResult(e)
+      });
+
+    });
+
+    
+  };
 
   return (
     <Layout>
@@ -129,7 +160,7 @@ function FaceDetect() {
               type='submit'
               variant='contained'
               color='error'
-              onClick={() => capture()}
+              onClick={(e) => handleFind(e)}
             >
               Find
             </Button>
@@ -137,9 +168,8 @@ function FaceDetect() {
         </Grid>
       </Grid>
 
-      {/* Next Container */}
-      {/* <Form /> */}
-      <Grid
+      {result.map(e=>(
+        <Grid
         container
         sx={{
           backgroundColor: '#ffff',
@@ -175,7 +205,7 @@ function FaceDetect() {
                 width: '70%',
               }}
             >
-              kariKada Bhai
+             {e.name}
             </Grid>
           </Grid>
           <Grid
@@ -211,7 +241,7 @@ function FaceDetect() {
               }}
               item
             >
-              1/234, Street Name, Town, City
+              {e.location}
             </Grid>
           </Grid>{' '}
           <Grid
@@ -230,7 +260,7 @@ function FaceDetect() {
               }}
               item
             >
-              1. Robbery
+             {}
             </Grid>
           </Grid>
         </Grid>
@@ -242,21 +272,25 @@ function FaceDetect() {
             justifyContent: 'center',
           }}
         >
-          <img
+          {/* <img
             style={{
               height: '80%',
               width: '100px',
             }}
             src={CriminalPic}
-          />
+          /> */}
           <Grid
             style={{ color: '#E65C00', marginTop: '5px', fontSize: '14px' }}
           >
-            Accuracy 89.58%
+           {}
           </Grid>
         </Grid>
       </Grid>
-    </Layout>
+
+      ))}
+
+
+          </Layout>
   );
 }
 
