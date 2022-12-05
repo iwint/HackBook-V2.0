@@ -3,11 +3,17 @@ import React, { useState } from 'react';
 import Layout from '../../../layouts/index';
 
 // import * as yup from "yup";
-import { Formik, useFormik } from 'formik';
+import { Formik, useFormik,useFormikContext} from 'formik';
 import Webcam from 'react-webcam';
+import {setDoc,collection} from 'firebase/firestore'
+import { async } from '@firebase/util';
+import axios from 'axios'
 
 function Add() {
+  const formikProps = useFormikContext()
+
   const [CaptureImg, setCaptureImg] = useState('');
+  const [file, setfile] = useState(null)
   const webcamRef = React.useRef(null);
   const canvasRef = React.useRef(null);
 
@@ -22,16 +28,37 @@ function Add() {
       name: '',
       location: '',
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit:async (values) => {
+      
+    
+      const formData = new FormData();
+     
+      formData.append("face",file);
+      formData.append("name",values.name)
+      formData.append("location",values.location)
+
+
+
+
+      axios({
+        method: "post",
+        url: "http://localhost:5000/create",
+        data: formData,
+        headers: {"Content-Type": "multipart/form-data", },
+      }).then(result=>{
+          alert(JSON.stringify(result.data));
+      });
+
     },
   });
 
   const handleImageChange = (e) => {
-    if (e.target.files.length) {
+    if (e.target.files.length ) {
+      setfile(e.target.files[0])
+      console.log(e.target.files[0]);
       setCaptureImg(URL.createObjectURL(e.target.files[0]));
     }
-  };
+  };  
 
   return (
     <Layout>
@@ -75,7 +102,7 @@ function Add() {
               component='label'
             >
               Upload File
-              <input type='file' onChange={handleImageChange} hidden />
+              <input type='file' name="file"  value={formik.values.file} onChange={handleImageChange} hidden />
             </Button>
             <Button
               sx={{ marginTop: '8px', width: '100%' }}
@@ -120,9 +147,7 @@ function Add() {
         </Grid>
         <Grid
           sx={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            height: '60%',
+            
           }}
           md={4}
           ml={8}
