@@ -15,8 +15,12 @@ import axios from 'axios';
 import fb from '../../../firebase';
 import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
 import { async } from '@firebase/util';
+import { MagnifyingGlass } from 'react-loader-spinner';
+import Loader from '../../../components/common/Loader';
+import { toast, ToastContainer } from 'react-toastify';
 
 function FaceDetect() {
+  const [loading, setloading] = useState(false);
   const [CaptureImg, setCaptureImg] = useState('');
   const [file, setfile] = useState(null);
   const webcamRef = React.useRef(null);
@@ -35,6 +39,7 @@ function FaceDetect() {
   };
 
   const handleFind = async (e) => {
+    setloading(true);
     const getArr = [];
     const formData = new FormData();
     formData.append('face', file);
@@ -43,24 +48,37 @@ function FaceDetect() {
       url: 'http://localhost:5000/facematch',
       data: formData,
       headers: { 'Content-Type': 'multipart/form-data' },
-    }).then(async (result) => {
-      const filter = result.data.filter((e) => e.result.confidence !== 0);
-      await Promise.all(
-        filter.map(async (e) => {
-          const db = getFirestore(fb);
-          const dm = await (await getDoc(doc(db, 'criminals', e.name))).data();
-          return { ...dm };
-        }),
-      ).then((e) => {
-        console.log(e);
+    })
+      .then(async (result) => {
+        if (result.status == 200) {
+          const filter = result.data.filter((e) => e.result.confidence !== 0);
+          setloading(false);
+          await Promise.all(
+            filter.map(async (e) => {
+              const db = getFirestore(fb);
+              const dm = await (
+                await getDoc(doc(db, 'criminals', e.name))
+              ).data();
+              return { ...dm };
+            }),
+          ).then((e) => {
+            console.log(e);
 
-        setResult(e);
+            setResult(e);
+          });
+        }
+      })
+      .catch((err) => {
+        setloading(false);
+        toast.error(err.message);
+        console.log(err.message);
       });
-    });
   };
 
   return (
     <Layout>
+      <ToastContainer />
+      <Loader isLoad={loading} setLoad={setloading} />
       <Grid container p={3} md={12} sx={{ backgroundColor: '#fff' }}>
         <Grid
           item
@@ -85,6 +103,7 @@ function FaceDetect() {
             }}
           />
         </Grid>
+
         <Grid
           md={4}
           sx={{
@@ -165,125 +184,140 @@ function FaceDetect() {
         </Grid>
       </Grid>
 
-      {result.map((e) => (
-        <Grid
-          container
-          sx={{
-            backgroundColor: '#ffff',
-            marginTop: '15px',
-            height: '100%',
-            fontWeight: 'bold',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-          md={12}
-          p={5}
-        >
+      {result.length > 0 ? (
+        result.map((e) => (
           <Grid
-            style={{
+            container
+            sx={{
+              backgroundColor: '#ffff',
+              marginTop: '15px',
+              height: '100%',
+              fontWeight: 'bold',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-              width: '400px',
+              justifyContent: 'space-between',
             }}
+            md={12}
+            p={5}
           >
             <Grid
-              sx={{
-                width: '100%',
+              style={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                flexDirection: 'column',
+                gap: '0.5rem',
+                width: '400px',
               }}
             >
-              <Grid item>Name</Grid>
               <Grid
-                item
-                style={{
-                  textAlign: 'start',
-                  width: '70%',
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
                 }}
               >
-                {e.name}
+                <Grid item>Name</Grid>
+                <Grid
+                  item
+                  style={{
+                    textAlign: 'start',
+                    width: '70%',
+                  }}
+                >
+                  {e.name}
+                </Grid>
+              </Grid>
+              <Grid
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Grid item>Category</Grid>
+                <Grid
+                  style={{
+                    textAlign: 'start',
+                    width: '70%',
+                  }}
+                  item
+                >
+                  Criminal/Missing
+                </Grid>
+              </Grid>{' '}
+              <Grid
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Grid item>Address</Grid>
+                <Grid
+                  style={{
+                    textAlign: 'start',
+                    width: '70%',
+                  }}
+                  item
+                >
+                  {e.location}
+                </Grid>
+              </Grid>{' '}
+              <Grid
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Grid item>Crime</Grid>
+                <Grid
+                  style={{
+                    textAlign: 'start',
+                    width: '70%',
+                    marginTop: '20px',
+                  }}
+                  item
+                >
+                  {}
+                </Grid>
               </Grid>
             </Grid>
             <Grid
-              sx={{
-                width: '100%',
+              style={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                alignItem: 'center',
+                flexDirection: 'column',
+                justifyContent: 'center',
               }}
             >
-              <Grid item>Category</Grid>
+              {/* <img
+        style={{
+          height: '80%',
+          width: '100px',
+        }}
+        src={CriminalPic}
+      /> */}
               <Grid
-                style={{
-                  textAlign: 'start',
-                  width: '70%',
-                }}
-                item
-              >
-                Criminal/Missing
-              </Grid>
-            </Grid>{' '}
-            <Grid
-              sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Grid item>Address</Grid>
-              <Grid
-                style={{
-                  textAlign: 'start',
-                  width: '70%',
-                }}
-                item
-              >
-                {e.location}
-              </Grid>
-            </Grid>{' '}
-            <Grid
-              sx={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Grid item>Crime</Grid>
-              <Grid
-                style={{
-                  textAlign: 'start',
-                  width: '70%',
-                  marginTop: '20px',
-                }}
-                item
+                style={{ color: '#E65C00', marginTop: '5px', fontSize: '14px' }}
               >
                 {}
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            style={{
-              display: 'flex',
-              alignItem: 'center',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }}
-          >
-            {/* <img
-            style={{
-              height: '80%',
-              width: '100px',
-            }}
-            src={CriminalPic}
-          /> */}
-            <Grid
-              style={{ color: '#E65C00', marginTop: '5px', fontSize: '14px' }}
-            >
-              {}
-            </Grid>
-          </Grid>
+        ))
+      ) : (
+        <Grid
+          sx={{
+            textAlign: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '1.5rem',
+            height: '100%',
+          }}
+        >
+          No Records Found
         </Grid>
-      ))}
+      )}
     </Layout>
   );
 }

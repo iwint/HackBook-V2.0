@@ -9,7 +9,7 @@ const app = express();
 const PORT = 5000;
 
 app.use(cors());
-const _apiUrl = 'https://faceapi.mxface.ai/api/face/';
+const _apiUrl = 'https://faceapi.mxface.ai/api/v2/face/';
 const _subscriptionKey = 'dVVuKB2ZNwLy4CqFME-aDG80qmANQ1164';
 
 const fb = require('./config');
@@ -81,9 +81,13 @@ app.post('/facematch', upload.single('face'), async (req, res) => {
       );
       return { name: e.split('.')[0], result: m };
     }),
-  ).then((e) => {
-    res.send(e);
-  });
+  )
+    .then((e) => {
+      res.send(e);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
 });
 
 app.listen(PORT, () => {

@@ -3,17 +3,19 @@ import React, { useState } from 'react';
 import Layout from '../../../layouts/index';
 
 // import * as yup from "yup";
-import { Formik, useFormik,useFormikContext} from 'formik';
+import { Formik, useFormik, useFormikContext } from 'formik';
 import Webcam from 'react-webcam';
-import {setDoc,collection} from 'firebase/firestore'
+import { setDoc, collection } from 'firebase/firestore';
 import { async } from '@firebase/util';
-import axios from 'axios'
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import Loader from '../../../components/common/Loader';
 
 function Add() {
-  const formikProps = useFormikContext()
-
+  const formikProps = useFormikContext();
+  const [loading, setloading] = useState(false);
   const [CaptureImg, setCaptureImg] = useState('');
-  const [file, setfile] = useState(null)
+  const [file, setfile] = useState(null);
   const webcamRef = React.useRef(null);
   const canvasRef = React.useRef(null);
 
@@ -28,40 +30,46 @@ function Add() {
       name: '',
       location: '',
     },
-    onSubmit:async (values) => {
-      
-    
+    onSubmit: async (values) => {
+      setloading(true);
       const formData = new FormData();
-     
-      formData.append("face",file);
-      formData.append("name",values.name)
-      formData.append("location",values.location)
 
-
-
+      formData.append('face', file);
+      formData.append('name', values.name);
+      formData.append('location', values.location);
 
       axios({
-        method: "post",
-        url: "http://localhost:5000/create",
+        method: 'post',
+        url: 'http://localhost:5000/create',
         data: formData,
-        headers: {"Content-Type": "multipart/form-data", },
-      }).then(result=>{
-          alert(JSON.stringify(result.data));
-      });
-
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+        .then((result) => {
+          if (result.status == 200) {
+            alert(JSON.stringify(result.data));
+            setloading(false);
+          }
+        })
+        .catch((err) => {
+          setloading(false);
+          toast.error(err.message);
+          console.log(err.message);
+        });
     },
   });
 
   const handleImageChange = (e) => {
-    if (e.target.files.length ) {
-      setfile(e.target.files[0])
+    if (e.target.files.length) {
+      setfile(e.target.files[0]);
       console.log(e.target.files[0]);
       setCaptureImg(URL.createObjectURL(e.target.files[0]));
     }
-  };  
+  };
 
   return (
     <Layout>
+      <ToastContainer />
+      <Loader isLoad={loading} />
       <Grid container p={3} md={12} sx={{ backgroundColor: '#fff' }}>
         <Grid item md={4} mr={'20px'} alignItems={'center'}>
           <Webcam
@@ -102,7 +110,13 @@ function Add() {
               component='label'
             >
               Upload File
-              <input type='file' name="file"  value={formik.values.file} onChange={handleImageChange} hidden />
+              <input
+                type='file'
+                name='file'
+                value={formik.values.file}
+                onChange={handleImageChange}
+                hidden
+              />
             </Button>
             <Button
               sx={{ marginTop: '8px', width: '100%' }}
@@ -145,13 +159,7 @@ function Add() {
             </Button>
           </Grid>
         </Grid>
-        <Grid
-          sx={{
-            
-          }}
-          md={4}
-          ml={8}
-        >
+        <Grid sx={{}} md={4} ml={8}>
           <form onSubmit={formik.handleSubmit}>
             <TextField
               sx={{ marginBottom: '10px' }}
