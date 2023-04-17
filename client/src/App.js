@@ -16,6 +16,7 @@ import CriminalRecords from './views/app/criminalrecords';
 import CriminalAdd from './views/app/criminalrecords/add';
 import Dashboard from './views/app/Dashboard';
 import EmailOSLINT from './views/app/emailoslint';
+//react app
 function App() {
   return (
     <BrowserRouter>
